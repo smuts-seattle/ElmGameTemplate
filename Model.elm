@@ -1,62 +1,12 @@
 module Model exposing (..)
 
-type Msg
-    = TitleBegin
-    | Tick Time
-
-
-type alias InputFrame =
-    { 
-    }
-
-
-type alias InputState =
-    { 
-    }
-
-
-type alias GameState =
-    { 
-    }
-
-
-type alias DrawState =
-    { 
-    }
-
-
-type alias Vector =
-    { x : Int
-    , y : Int
-    }
+import FirstScene.FirstScene exposing (..)
 
 
 type Model
-    = Title
-    | Game GameModel
-
-
-type alias GameModel =
-    { inputFrame : InputFrame
-    , inputState : InputState
-    , gameState : GameState
-    , drawState : DrawState
-    }
-
-
-newInputFrame : InputFrame
-newInputFrame =
-    { 
-    }
+    = First FirstModel
 
 
 initModel : Model
 initModel =
-    Title
-
-
-initGameModel : Model
-initGameModel =
-    Game
-        {
-        }
+    First initFirstModel

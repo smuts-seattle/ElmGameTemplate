@@ -1,74 +1,35 @@
 module Update exposing (..)
 
 import Model exposing (..)
-import List exposing (..)
+import FirstScene.FirstScene exposing (..)
+import Platform.Sub
+
+
+type Msg
+    = FirstMsg FirstSceneMsg
+    | UnknownMsg
 
 
 subscriptions : Model -> Sub Msg
-subscriptions model = Sub.none
+subscriptions model =
+    case model of
+        First firstModel ->
+            (firstSceneSubscriptions firstModel) |> (Sub.map (\sub -> FirstMsg sub))
 
 
 update : Msg -> Model -> ( Model, Cmd msg )
 update msg model =
     case model of
-        Title ->
-            updateTitle msg
+        First firstModel ->
+            case msg of
+                FirstMsg firstMsg ->
+                    let
+                        ( updatedFirstModel, cmd, transition ) =
+                            updateFirstScene firstMsg firstModel
+                    in
+                        case transition of
+                            _ ->
+                                ( First updatedFirstModel, cmd )
 
-        Game gameModel ->
-            updateGame msg gameModel
-
-
-updateTitle : Msg -> ( Model, Cmd msg )
-updateTitle msg =
-    case msg of
-        TitleBegin ->
-            ( initGameModel, Cmd.none )
-
-        _ ->
-            ( Title, Cmd.none )
-
-
-updateGame : Msg -> GameModel -> ( Model, Cmd msg )
-updateGame msg game =
-    case msg of
-        -- Main game loop
-        Tick time ->
-            let
-                updatedInputState =
-                    updateInputState game.inputState game.inputFrame
-
-                updatedGameState =
-                    updateGameState game.gameState updatedInputState
-
-                updatedDrawState =
-                    updateDrawState game.drawState game.gameState game.inputState
-            in
-                ( Game
-                    { game
-                        | inputFrame = newInputFrame
-                        , inputState = updatedInputState
-                        , gameState = updatedGameState
-                        , drawState = updatedDrawState
-                    }
-                , Cmd.none
-                )
-
-        -- Input messages
-
-        _ ->
-            ( Game game, Cmd.none )
-
-
-updateInputState : InputState -> InputFrame -> InputState
-updateInputState inputState inputFrame =
-    inputState
-
-
-updateGameState : GameState -> InputState -> GameState
-updateGameState gameState inputState =
-    gameState
-
-
-updateDrawState : DrawState -> GameState -> InputState -> DrawState
-updateDrawState drawState gameState inputState =
-    drawState
+                _ ->
+                    ( model, Cmd.none )
