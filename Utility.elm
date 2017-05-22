@@ -1,15 +1,7 @@
 module Utility exposing (..)
 
-import Html exposing (Html, div)
-import Html.Attributes exposing (style)
 import List
 
-type alias PlayerID =
-    Int
-
-
-
---Common definition of a vector
 
 type alias Coordinate =
     { x : Int, y : Int }

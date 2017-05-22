@@ -1,35 +1,40 @@
 module Update exposing (..)
 
 import Model exposing (..)
-import FirstScene.FirstScene exposing (..)
+import TEMPLATEScene.Update.SceneUpdate exposing (..)
+-- Add more scenes here
 import Platform.Sub
 
 
+-- The different categories of messages.
+-- Each scene has its own subset of messages that can apply to it.
 type Msg
-    = FirstMsg FirstSceneMsg
+    = TEMPLATEMsg TEMPLATESceneMsg
     | UnknownMsg
 
 
+-- The game's current subscriptions, i.e. the subscriptions of the current scene.
 subscriptions : Model -> Sub Msg
 subscriptions model =
     case model of
-        First firstModel ->
-            (firstSceneSubscriptions firstModel) |> (Sub.map (\sub -> FirstMsg sub))
+        TEMPLATEModel templateModel ->
+            (templateSceneSubscriptions templateModel) |> (Sub.map (\sub -> TEMPLATEMsg sub))
 
 
+-- Updates the state of the current scene and handles any scene transitions if necessary.
 update : Msg -> Model -> ( Model, Cmd msg )
 update msg model =
     case model of
-        First firstModel ->
+        TEMPLATEModel templateModel ->
             case msg of
-                FirstMsg firstMsg ->
+                TEMPLATEMsg templateMsg ->
                     let
-                        ( updatedFirstModel, cmd, transition ) =
-                            updateFirstScene firstMsg firstModel
+                        ( updatedTEMPLATEModel, cmd, transition ) =
+                            updateTEMPLATEScene templateMsg templateModel
                     in
                         case transition of
                             _ ->
-                                ( First updatedFirstModel, cmd )
+                                ( TEMPLATEModel updatedTEMPLATEModel, cmd )
 
                 _ ->
                     ( model, Cmd.none )
