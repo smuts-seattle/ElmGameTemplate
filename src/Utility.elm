@@ -3,6 +3,15 @@ module Utility exposing (..)
 import List
 
 
+ifThenElse : Bool -> a -> a -> a
+ifThenElse conditional trueCase falseCase =
+    if conditional then
+        trueCase
+
+    else
+        falseCase
+
+
 type alias Coordinate =
     { x : Int, y : Int }
 
@@ -10,10 +19,13 @@ type alias Coordinate =
 coordinateDistance : Coordinate -> Coordinate -> Float
 coordinateDistance a b =
     let
-        x = a.x - b.x
-        y = a.y - b.y
+        x =
+            a.x - b.x
+
+        y =
+            a.y - b.y
     in
-        (x * x) + (y * y) |> toFloat |> sqrt
+    (x * x) + (y * y) |> toFloat |> sqrt
 
 
 type alias Vector =
@@ -43,8 +55,8 @@ filterMaybe list =
                 Nothing ->
                     acc
 
-                Just elem ->
-                    elem :: acc
+                Just e ->
+                    e :: acc
         )
         []
         list
@@ -52,42 +64,17 @@ filterMaybe list =
 
 findFirst : (a -> Bool) -> List a -> Maybe a
 findFirst filter l =
-    List.map (\e -> if filter e then Just e else Nothing) l
-    |> filterMaybe |> List.head
+    List.map
+        (\e ->
+            if filter e then
+                Just e
 
-
---Performs a list.Head operation, crashes if the list is empty.
-
-
-unsafeHead : List a -> a
-unsafeHead list =
-    unsafe (List.head list)
-
-
-
---Performs a List.Tail operation, crashes if the list is empty.
-
-
-unsafeTail : List a -> List a
-unsafeTail list =
-    unsafe (List.tail list)
-
-
-
---Forces a value from a Maybe, crashes if the maybe is nothing.
---Useful in instances where it is contextually impossible to get
---"Nothing" out of an operation, such as a List.head when the list
---was already checked to be non-empty.
-
-
-unsafe : Maybe a -> a
-unsafe x =
-    case x of
-        Just safe ->
-            safe
-
-        Nothing ->
-            Debug.crash "unsafe operation failed!"
+            else
+                Nothing
+        )
+        l
+        |> filterMaybe
+        |> List.head
 
 
 
@@ -112,7 +99,6 @@ listRemove l e =
 listUpdate : (a -> Bool) -> List a -> a -> List a
 listUpdate identifier l e =
     e
-        :: (List.filter
-                (\i -> not (identifier i))
-                l
-           )
+        :: List.filter
+            (\i -> not (identifier i))
+            l

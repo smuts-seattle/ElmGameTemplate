@@ -1,17 +1,20 @@
 module Main exposing (..)
 
+import Browser
 import Model exposing (..)
 import Update exposing (..)
 import View exposing (..)
-import Html
+
 
 
 -- The game program
-main : Program Never Model Msg
+
+
+main : Program String Model Msg
 main =
-    Html.program
-        { init = ( initModel, Cmd.none )
+    Browser.document
+        { init = \_ -> ( initModel, Cmd.none )
         , subscriptions = subscriptions
-        , view = view
+        , view = \m -> Browser.Document "TEMPLATEGame" [ view m ]
         , update = update
         }
